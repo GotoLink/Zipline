@@ -1,0 +1,16 @@
+
+achievement.makeRope=Twist and shout
+achievement.makeRope.desc=Use string to make rope.
+achievement.fireArrowRope=Clothesline
+achievement.fireArrowRope.desc=Fire an arrow with rope attached.
+achievement.breakRopeBridge=Look out below
+achievement.breakRopeBridge.desc=Break a suspension bridge while standing on it.
+achievement.rideZipline=RCWAPITM!
+achievement.rideZipline.desc=Ride a rope zipline with a handlebar!
+
+tile.rope.name=Rope
+tile.ropebridge.name=Rope Bridge
+tile.clothsheet.name=ClothSheet
+tile.leather.name=LeatherBlock
+item.arrowrope.name=Arrow with Rope
+item.handlebar.name=HandleBar
