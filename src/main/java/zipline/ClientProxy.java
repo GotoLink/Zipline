@@ -22,7 +22,7 @@ public class ClientProxy extends CommonProxy implements ICameraMod {
         RenderingRegistry.registerEntityRenderingHandler(EntityHandlebar.class, RenderHandlebar.INSTANCE);
         FMLCommonHandler.instance().bus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
-        ModCamera.registerModifier(this, mod_zipline.ropeID);
+        ModCamera.INSTANCE.registerModifier(mod_zipline.ropeID, this);
     }
 
     @Override
@@ -46,6 +46,6 @@ public class ClientProxy extends CommonProxy implements ICameraMod {
 
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
-        ModCamera.modifyCamera(FMLClientHandler.instance().getClientPlayerEntity(), event.partialTicks);
+        ModCamera.INSTANCE.modifyCamera(FMLClientHandler.instance().getClientPlayerEntity(), event.partialTicks);
     }
 }

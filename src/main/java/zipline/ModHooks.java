@@ -1,16 +1,15 @@
 package zipline;
 
 import java.util.HashMap;
-import java.util.Map;
 
-public class ModHooks {
-    public static Map modList = new HashMap();
+public class ModHooks<K, V> {
+    private HashMap<K, V> modList = new HashMap<K, V>();
 
-    public static void registerModifier(String s, Object obj, Object obj1) {
-        if (!modList.containsKey(s)) {
-            modList.put(s, new HashMap());
-        }
-        HashMap hashmap = (HashMap) modList.get(s);
-        hashmap.put(obj, obj1);
+    public void registerModifier(K obj, V obj1) {
+        modList.put(obj, obj1);
+    }
+
+    public V getModifier(K key) {
+        return modList.get(key);
     }
 }
