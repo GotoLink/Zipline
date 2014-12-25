@@ -27,7 +27,7 @@ import zipline.items.ItemArrowRope;
 import zipline.items.ItemHandlebar;
 import zipline.items.ItemRopeBlock;
 
-@Mod(modid = "zipline", name = "Zipline")
+@Mod(modid = "zipline", name = "Zipline", version = "${version}")
 public class mod_zipline {
     @SidedProxy(modId = "zipline", clientSide = "zipline.ClientProxy", serverSide = "zipline.CommonProxy")
     public static CommonProxy proxy;
