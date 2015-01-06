@@ -51,9 +51,7 @@ public class mod_zipline {
         GameRegistry.registerBlock(ropeID, ItemRopeBlock.class, "Rope");
         ropeBridgeID = (BlockTensile) new BlockRopeBridge(Material.wood).setBlockName("ropebridge").setBlockTextureName("zipline:ropebridge").setHardness(2.0F).setStepSound(Block.soundTypeWood);
         GameRegistry.registerBlock(ropeBridgeID, "RopeBridge");
-        clothSheetID = (BlockTensile) new BlockTensile(Material.cloth).setBlockName("clothsheet").setBlockTextureName("wool_colored_white").setHardness(0.1F).setStepSound(Block.soundTypeCloth);
-        clothSheetID.pixelsWide = 16.0D;
-        clothSheetID.boundingWidth = 1.0D;
+        clothSheetID = (BlockTensile) new BlockTensile(Material.cloth).setWidthInfo(16.0D, 1.0D).setBlockName("clothsheet").setBlockTextureName("wool_colored_white").setHardness(0.1F).setStepSound(Block.soundTypeCloth);
         clothSheetID.crossPieces = new double[0];
         GameRegistry.registerBlock(clothSheetID, "ClothSheet");
         leatherID = (BlockTensile) new BlockLeather(Material.cloth).setBlockName("leather").setBlockTextureName("zipline:leather").setHardness(0.2F).setStepSound(Block.soundTypeCloth);

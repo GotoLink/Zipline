@@ -2,15 +2,16 @@ package zipline.blocks;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zipline.mod_zipline;
 
 public class BlockRopeBridge extends BlockTensile {
     public BlockRopeBridge(Material material) {
         super(material);
-        pixelsWide = 16.0D;
-        boundingWidth = 1.0D;
+        setWidthInfo(16.0D, 1.0D);
         crossPieces = new double[]{0.1875D, 0.8125D};
     }
 
@@ -24,5 +25,10 @@ public class BlockRopeBridge extends BlockTensile {
                 ((EntityPlayer) l).triggerAchievement(mod_zipline.achievementBreakRopeBridge);
             }
         }
+    }
+
+    @Override
+    public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity){
+        return world.getBlock(x, y+1, z) == this;
     }
 }

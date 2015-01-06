@@ -6,12 +6,9 @@ import net.minecraft.util.IIcon;
 import java.util.ArrayList;
 
 public class ModModel {
-    public ArrayList<double[]> vertices;
-    public int x;
-    public int y;
-    public int z;
-    public double u;
-    public double v;
+    private ArrayList<double[]> vertices;
+    private int x, y, z;
+    private double u, du, v, dv;
 
     public ModModel(int i, int j, int k, IIcon l) {
         setPosition(i, j, k);
@@ -27,7 +24,9 @@ public class ModModel {
 
     public void setTexture(IIcon i) {
         this.u = i.getMinU();
+        this.du = i.getMaxU() - i.getMinU();
         this.v = i.getMinV();
+        this.dv = i.getMaxV() - i.getMinV();
     }
 
     public void addVertexWithUV(double d, double d1, double d2, double d3, double d4) {
@@ -81,27 +80,23 @@ public class ModModel {
     }
 
     public void render(boolean flag) {
-        render(flag, false, false);
+        render(flag, false);
     }
 
-    public void render(boolean flag, boolean flag1) {
-        render(flag, flag1, false);
-    }
-
-    public void render(boolean flag, boolean flag1, boolean flag2) {
-        Tessellator tessellator = Tessellator.instance;
-        int i = flag1 ? -1 : 1;
-        int j = flag2 ? -1 : 1;
-        int k = flag1 ? 1 : 0;
-        int l = flag2 ? 1 : 0;
-        if (!flag) {
+    public void render(boolean reverse, boolean flag1) {
+        int i = 1, k = 0;
+        if (flag1) {
+            i = -1;
+            k = 1;
+        }
+        if (!reverse) {
             for (double[] ad : this.vertices) {
-                tessellator.addVertexWithUV(this.x + ad[0], this.y + ad[1], this.z + ad[2], this.u + (ad[3] * i + k) / (3 * 16.0D), this.v + (ad[4] * j + l) / (3 * 16.0D));
+                Tessellator.instance.addVertexWithUV(this.x + ad[0], this.y + ad[1], this.z + ad[2], this.u + this.du*(ad[3] * i + k), this.v + this.dv*ad[4]);
             }
         } else {
             for (int j1 = this.vertices.size() - 1; j1 >= 0; j1--) {
                 double[] ad1 = this.vertices.get(j1);
-                tessellator.addVertexWithUV(this.x + ad1[0], this.y + ad1[1], this.z + ad1[2], this.u + (ad1[3] * i + k) / (3 * 16.0D), this.v + (ad1[4] * j + l) / (3 * 16.0D));
+                Tessellator.instance.addVertexWithUV(this.x + ad1[0], this.y + ad1[1], this.z + ad1[2], this.u + this.du*(ad1[3] * i + k), this.v + this.dv*ad1[4]);
             }
         }
     }

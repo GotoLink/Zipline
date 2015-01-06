@@ -25,20 +25,20 @@ public class BlockTensile extends Block implements ITensile {
     public static float swingPosition = 0.0F;
     public static float swingAmplitude = 0.0F;
     public static float swingDecay = 0.9F;
-    public double[] crossPieces = {0.5D};
+    public double[] crossPieces = new double[]{0.5D};
 
     public static double[] heights = {0.125D, 0.375D, 0.625D, 1.125D};
-    public double pixelsWide;
-    public double pixelsHigh;
-    public double boundingWidth;
-    public double boundingHeight;
+    private double pixelsWide = 2.0D, pixelsHigh = 2.0D;
+    private double boundingWidth = 0.25D, boundingHeight = 0.25D;
 
     public BlockTensile(Material material) {
         super(material);
-        this.pixelsWide = 2.0D;
-        this.pixelsHigh = 2.0D;
-        this.boundingWidth = 0.25D;
-        this.boundingHeight = 0.25D;
+    }
+
+    public Block setWidthInfo(double pixW, double boundingW) {
+        pixelsWide = pixW;
+        boundingWidth = boundingW;
+        return this;
     }
 
     @Override

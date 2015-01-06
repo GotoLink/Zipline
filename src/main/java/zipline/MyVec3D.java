@@ -2,7 +2,7 @@ package zipline;
 
 import net.minecraft.util.Vec3;
 
-public class MyVec3D extends Vec3 {
+public final class MyVec3D extends Vec3 {
     public MyVec3D(double d, double d1, double d2) {
         super(d, d1, d2);
     }
