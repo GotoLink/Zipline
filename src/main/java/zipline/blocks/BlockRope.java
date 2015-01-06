@@ -169,7 +169,7 @@ public class BlockRope extends BlockTensile implements IZipline {
         if ((i1 & 0xC) == 12) {
             return false;
         }
-        EntityHandlebar entityhandlebar = new EntityHandlebar(world, i + 0.5D, j + 0.5D, k + 0.5D, entityliving);
+        EntityHandlebar entityhandlebar = new EntityHandlebar(world, i + 0.5D, j + 0.5D, k + 0.5D);
         entityhandlebar.setPosition(i + 0.5D, j + 0.5D - entityhandlebar.height, k + 0.5D);
         double d = i - entityliving.posX;
         double d1 = j - entityliving.boundingBox.minY - 0.5D;
@@ -178,7 +178,6 @@ public class BlockRope extends BlockTensile implements IZipline {
         entityhandlebar.motionZ = entityliving.motionZ;
         double d3 = MathHelper.sqrt_double(d * d + d1 * d1 + d2 * d2);
         if (d3 < 4.0D) {
-            entityhandlebar.owner = entityliving;
             world.spawnEntityInWorld(entityhandlebar);
             entityliving.mountEntity(entityhandlebar);
             itemstack.stackSize -= 1;

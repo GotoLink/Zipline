@@ -2,7 +2,6 @@ package zipline;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -14,19 +13,16 @@ import zipline.items.IHandlebar;
 import java.util.List;
 
 public class EntityHandlebar extends Entity implements IHandlebar {
-    public int lastSoundPosX2;
-    public int lastSoundPosZ2;
-    public EntityLivingBase owner;
+    private int lastSoundPosX2, lastSoundPosZ2;
 
     public EntityHandlebar(World world) {
         super(world);
         setSize(0.6F, 1.8F);
     }
 
-    public EntityHandlebar(World world, double d, double d1, double d2, EntityLivingBase entityliving) {
+    public EntityHandlebar(World world, double d, double d1, double d2) {
         this(world);
         setPosition(d, d1, d2);
-        this.owner = entityliving;
     }
 
     @Override
@@ -70,7 +66,6 @@ public class EntityHandlebar extends Entity implements IHandlebar {
         }
         if (!(block instanceof IZipline)) {
             dismount();
-            setDead();
             return;
         }
         IZipline izipline = (IZipline) block;
@@ -97,7 +92,7 @@ public class EntityHandlebar extends Entity implements IHandlebar {
                     this.motionZ *= 0.9D;
                     int i2 = (int) (this.posX * 2.0D);
                     int j2 = (int) (this.posZ * 2.0D);
-                    if ((i2 != this.lastSoundPosX2) || (j2 != this.lastSoundPosZ2)) {
+                    if (i2 != this.lastSoundPosX2 || j2 != this.lastSoundPosZ2) {
                         this.lastSoundPosX2 = i2;
                         this.lastSoundPosZ2 = j2;
                         Block.SoundType stepsound = izipline.getStepSound(this, this.worldObj, i, j, k, l);
