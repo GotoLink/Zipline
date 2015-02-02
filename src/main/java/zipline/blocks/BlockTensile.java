@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +16,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import zipline.ModModel;
-import zipline.MyVec3D;
 import zipline.mod_zipline;
 
 import java.util.List;
@@ -33,6 +33,7 @@ public class BlockTensile extends Block implements ITensile {
 
     public BlockTensile(Material material) {
         super(material);
+        setCreativeTab(CreativeTabs.tabTransport);
     }
 
     public Block setWidthInfo(double pixW, double boundingW) {
@@ -157,15 +158,6 @@ public class BlockTensile extends Block implements ITensile {
             setBlockBoundsBasedOnState(world, i, j, k);
             super.addCollisionBoxesToList(world, i, j, k, axisalignedbb, arraylist, entity);
         }
-    }
-
-    @Override
-    public MovingObjectPosition collisionRayTrace(World world, int i, int j, int k, Vec3 vec3d, Vec3 vec3d1) {
-        MovingObjectPosition movingobjectposition = super.collisionRayTrace(world, i, j, k, vec3d, vec3d1);
-        if (movingobjectposition != null) {
-            movingobjectposition.hitVec = new MyVec3D(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
-        }
-        return movingobjectposition;
     }
 
     public void updateMetadata(World world, int i, int j, int k) {
@@ -341,10 +333,8 @@ public class BlockTensile extends Block implements ITensile {
         float f1 = (float) (0.5D + this.boundingWidth / 2.0D);
         float f2 = (float) (0.5D - this.boundingHeight / 2.0D);
         float f3 = (float) (0.5D + this.boundingHeight / 2.0D);
-        float f4 = 1.0F;
         if ((l & 0xC) == 12) {
-            boolean flag = (l & 0x1) == 1;
-            if (flag) {
+            if ((l & 0x1) == 1) {
                 setBlockBounds(f, 0.0F, f2, f1, 1.0F, f3);
             } else {
                 setBlockBounds(f2, 0.0F, f, f3, 1.0F, f1);
@@ -352,23 +342,23 @@ public class BlockTensile extends Block implements ITensile {
         } else if ((l & 0xC) == 8) {
             boolean flag1 = isTensile(iblockaccess, i, j - 1, k);
             if (i1 == 0) {
-                setBlockBounds(flag1 ? f2 : 0.0F, 0.0F, f, 1.0F, f4, f1);
+                setBlockBounds(flag1 ? f2 : 0.0F, 0.0F, f, 1.0F, 1.0F, f1);
             } else if (i1 == 1) {
-                setBlockBounds(f, 0.0F, flag1 ? f2 : 0.0F, f1, f4, 1.0F);
+                setBlockBounds(f, 0.0F, flag1 ? f2 : 0.0F, f1, 1.0F, 1.0F);
             } else if (i1 == 2) {
-                setBlockBounds(0.0F, 0.0F, f, flag1 ? f3 : 1.0F, f4, f1);
+                setBlockBounds(0.0F, 0.0F, f, flag1 ? f3 : 1.0F, 1.0F, f1);
             } else if (i1 == 3) {
-                setBlockBounds(f, 0.0F, 0.0F, f1, f4, flag1 ? f3 : 1.0F);
+                setBlockBounds(f, 0.0F, 0.0F, f1, 1.0F, flag1 ? f3 : 1.0F);
             }
         } else {
             int j1 = l & 0x1;
             int k1 = (l & 0x6) >> 1;
-            float f5 = k1 != 3 ? 0.125F : k1 != 2 ? 0.0F : 0.5F;
-            float f6 = k1 != 3 ? 0.5F : k1 != 2 ? 0.25F : k1 != 0 ? 0.5F : 1.0F;
+            float f5 = k1 * (float) boundingHeight;
             if (j1 == 0) {
-                setBlockBounds(0.0F, f5, f, 1.0F, f6, f1);
-            } else
-                setBlockBounds(f, f5, 0.0F, f1, f6, 1.0F);
+                setBlockBounds(0.0F, f5, f, 1.0F, f5 + (float) boundingHeight, f1);
+            } else {
+                setBlockBounds(f, f5, 0.0F, f1, f5 + (float) boundingHeight, 1.0F);
+            }
         }
     }
 
@@ -392,10 +382,6 @@ public class BlockTensile extends Block implements ITensile {
         modmodel.addVertexWithUV(d3 + d10, d4 + d11, d5 + d12, k1, d13, d14);
         modmodel.render(false);
         modmodel.render(true, true);
-    }
-
-    public static int getTensileMetadata(IBlockAccess iblockaccess, int i, int j, int k) {
-        return getTensileMetadata(iblockaccess, i, j, k, -1);
     }
 
     public static int getTensileMetadata(IBlockAccess iblockaccess, int i, int j, int k, int l) {
@@ -475,9 +461,9 @@ public class BlockTensile extends Block implements ITensile {
                 }
             }
         }
-        drawTensile(j, k, l, flag ? d2 : 0.5D, ad[i2], flag ? 0.5D : d2, flag ? d3 : 0.5D, ad[l1], flag ? 0.5D : d3, i1, byte1, byte1, flag ? 16 : flag3 ? 1 : flag ? 17 : 2, this.pixelsWide / 32.0D);
+        drawTensile(j, k, l, flag ? d2 : 0.5D, ad[i2], flag ? 0.5D : d2, flag ? d3 : 0.5D, ad[l1], flag ? 0.5D : d3, i1, byte1, byte1, flag ? 16 : flag3 ? 1 : 2, this.pixelsWide / 32.0D);
         for (double crossPiece : this.crossPieces) {
-            drawTensile(j, k, l, flag ? d2 : crossPiece, ad[i2], flag ? crossPiece : d2, flag ? d3 : crossPiece, ad[l1], flag ? crossPiece : d3, i1, byte3, byte5, flag ? 8 : flag3 ? 17 : flag ? 1 : 10, this.pixelsHigh / 32.0D);
+            drawTensile(j, k, l, flag ? d2 : crossPiece, ad[i2], flag ? crossPiece : d2, flag ? d3 : crossPiece, ad[l1], flag ? crossPiece : d3, i1, byte3, byte5, flag ? 8 : flag3 ? 17 : 10, this.pixelsHigh / 32.0D);
         }
     }
 
