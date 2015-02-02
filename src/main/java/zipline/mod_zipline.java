@@ -3,6 +3,7 @@ package zipline;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -10,13 +11,18 @@ import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.material.Material;
+import net.minecraft.dispenser.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import zipline.blocks.BlockLeather;
@@ -28,7 +34,7 @@ import zipline.items.ItemHandlebar;
 import zipline.items.ItemRopeBlock;
 
 @Mod(modid = "zipline", name = "Zipline", version = "${version}")
-public class mod_zipline {
+public final class mod_zipline{
     @SidedProxy(modId = "zipline", clientSide = "zipline.ClientProxy", serverSide = "zipline.CommonProxy")
     public static CommonProxy proxy;
     public static int ropeLength = 8;
@@ -72,21 +78,24 @@ public class mod_zipline {
         achievementFireArrowRope = new Achievement("achievement.fireArrowRope", "fireArrowRope", l, i1 + 2, arrowRopeID, achievementMakeRope).registerStat();
         achievementBreakRopeBridge = new Achievement("achievement.breakRopeBridge", "breakRopeBridge", l + 2, i1 + 2, ropeBridgeID, achievementFireArrowRope).registerStat();
         achievementRideZipline = new Achievement("achievement.rideZipline", "rideZipline", l, i1 + 4, handlebarID, achievementFireArrowRope).registerStat();
-        addRecipes();
+        BlockDispenser.dispenseBehaviorRegistry.putObject(arrowRopeID, new BehaviorDefaultDispenseItem() {
+            @Override
+            public ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack)
+            {
+                World world = blockSource.getWorld();
+                IPosition iposition = BlockDispenser.func_149939_a(blockSource);
+                IProjectile iprojectile = ((ItemArrowRope) arrowRopeID).getEntityArrow(world, iposition.getX(), iposition.getY(), iposition.getZ(), itemStack);
+                EnumFacing enumfacing = BlockDispenser.func_149937_b(blockSource.getBlockMetadata());
+                iprojectile.setThrowableHeading((double)enumfacing.getFrontOffsetX(), (double)((float)enumfacing.getFrontOffsetY() + 0.1F), (double)enumfacing.getFrontOffsetZ(), 1.1F, 6.0F);
+                world.spawnEntityInWorld((Entity)iprojectile);
+                itemStack.splitStack(1);
+                return itemStack;
+            }
+        });
     }
 
-    public boolean dispenseEntity(World world, double d, double d1, double d2, int i, int j, ItemStack itemstack) {
-        if (itemstack.getItem() == arrowRopeID) {
-            net.minecraft.entity.projectile.EntityArrow entityarrow = ((ItemArrowRope) arrowRopeID).getEntityArrow(world, d, d1, d2, itemstack);
-            entityarrow.setThrowableHeading(i, 0.1000000014901161D, j, 1.1F, 6.0F);
-            world.spawnEntityInWorld(entityarrow);
-            return true;
-        }
-
-        return false;
-    }
-
-    public void addRecipes() {
+    @Mod.EventHandler
+    public void addRecipes(FMLInitializationEvent event) {
         GameRegistry.addRecipe(new ItemStack(Items.string, 4), "!", '!', Blocks.wool);
         GameRegistry.addRecipe(new ItemStack(ropeID), "S", "S", 'S', Items.string);
         GameRegistry.addRecipe(new ItemStack(Items.string, 2), "!", '!', ropeID);
