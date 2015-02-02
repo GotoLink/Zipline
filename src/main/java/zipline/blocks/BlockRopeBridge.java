@@ -1,5 +1,7 @@
 package zipline.blocks;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,6 +31,11 @@ public class BlockRopeBridge extends BlockTensile {
 
     @Override
     public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity){
-        return world.getBlock(x, y+1, z) == this;
+        Block up = world.getBlock(x, y+1, z);
+        if(up instanceof BlockAir){
+            int meta = world.getBlockMetadata(x, y, z);
+            return meta > 7 && meta < 12;
+        }
+        return up instanceof ITensile;
     }
 }
