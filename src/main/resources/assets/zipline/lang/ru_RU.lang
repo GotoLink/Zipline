@@ -1,0 +1,16 @@
+
+achievement.makeRope=Вертись и кричи
+achievement.makeRope.desc=Используйте нить, чтобы сделать верёвку.
+achievement.fireArrowRope=Бельевая верёвка
+achievement.fireArrowRope.desc=Выстрелите стрелой с прикреплённой верёвкой.
+achievement.breakRopeBridge=Посмотри вниз
+achievement.breakRopeBridge.desc=Сломайте подвесной мост, стоя на нём.
+achievement.rideZipline=RCWAPITM!
+achievement.rideZipline.desc=Прокатитесь на верёвке с помощью рукоятки!
+
+tile.rope.name=Верёвка
+tile.ropebridge.name=Верёвочный мост
+tile.clothsheet.name=Лист ткани
+tile.leather.name=Кожаный блок
+item.arrowrope.name=Стрела с верёвкой
+item.handlebar.name=Рукоятка
